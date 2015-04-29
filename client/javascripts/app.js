@@ -1,6 +1,8 @@
 var main = function (toDoObjects) {
     "use strict";
+
     console.log("SANITY CHECK");
+
     var toDos = toDoObjects.map(function (toDo) {
           // we'll just return the description
           // of this toDoObject
@@ -82,7 +84,10 @@ var main = function (toDoObjects) {
                 $button.on("click", function () {
                     var description = $input.val(),
                         tags = $tagInput.val().split(","),
-                        newToDo = {"description":description, "tags":tags};
+                        newToDo = {
+                            "description":description,
+                            "tags":tags
+                        };
 
                     $.post("todos", newToDo, function (result) {
                         console.log(result);
@@ -95,6 +100,8 @@ var main = function (toDoObjects) {
                             return toDo.description;
                         });
 
+                        // Following line inspired by: https://github.com/yashchheda/Assignment_9_Socket_Io_Amazeriffic/blob/master/client/javascripts/app.js
+                        socket.emit("Add to-do task", newToDo);
                         $input.val("");
                         $tagInput.val("");
                     });
@@ -114,6 +121,38 @@ var main = function (toDoObjects) {
     });
 
     $(".tabs a:first-child span").trigger("click");
+
+    // Following inspired by: https://github.com/yashchheda/Assignment_9_Socket_Io_Amazeriffic/blob/master/client/javascripts/app.js
+    var socket = io();
+
+    socket.on("AddTodo", function (content) {
+        var $newList = $("#newList"),
+            $oldList = $("#oldList"),
+            $tagList = $("#tagList"),
+            $description = content.description,
+            $tag = content.tags,
+            // preparing for the slide down
+            $newTodo = $("<li>").text($description).hide();
+
+        if ($newList.length > 0) {
+            $newList.prepend($newTodo);
+            $newTodo.slideDown(350);
+        } else if ($oldList.length > 0) {
+            $oldList.append($newTodo);
+            $newTodo.slideDown(350);
+        } else if ($tagList.length > 0) {
+            $("main .content").append($("<h3>").text($tag));
+            $("main .content").append($newTodo);
+            $newTodo.slideDown(350);
+        }
+
+        $.getJSON("todos.json", function (newToDoObjects) {
+            toDoObjects = newToDoObjects;
+            toDos = newToDoObjects.map(function (taskItem) {
+                return taskItem.description;
+            });
+        });
+    });
 };
 
 $(document).ready(function () {
