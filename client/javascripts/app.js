@@ -101,7 +101,7 @@ var main = function (toDoObjects) {
                         });
 
                         // Following line inspired by: https://github.com/yashchheda/Assignment_9_Socket_Io_Amazeriffic/blob/master/client/javascripts/app.js
-                        socket.emit("Add to-do task", newToDo);
+                        socket.emit("addTodo", newToDo);
                         $input.val("");
                         $tagInput.val("");
                     });
@@ -125,7 +125,7 @@ var main = function (toDoObjects) {
     // Following inspired by: https://github.com/yashchheda/Assignment_9_Socket_Io_Amazeriffic/blob/master/client/javascripts/app.js
     var socket = io();
 
-    socket.on("AddTodo", function (content) {
+    socket.on("addTodo", function (content) {
         var $newList = $("#newList"),
             $oldList = $("#oldList"),
             $tagList = $("#tagList"),
