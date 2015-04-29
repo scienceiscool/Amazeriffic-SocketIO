@@ -14,3 +14,7 @@ _Tips:_<br>
 - Consider using a jQuery effect like .slideDown() to avoid jarring changes to the visual appearance of lists<br>
 
 __Status:__ Under construction
+
+__To run:__
+
+    nodejs server.js
